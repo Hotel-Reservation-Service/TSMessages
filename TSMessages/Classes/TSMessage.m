@@ -377,11 +377,7 @@ __weak static UIViewController *_defaultViewController;
                        TSMessageView *currentMessage = [[TSMessage sharedMessage].messages objectAtIndex:0];
                        if (currentMessage.messageIsFullyDisplayed)
                        {
-                           [[TSMessage sharedMessage] fadeOutNotification:currentMessage animationFinishedBlock:^{
-                               if(completion) {
-                                   completion();
-                               }
-                           }];
+                           [[TSMessage sharedMessage] fadeOutNotification:currentMessage animationFinishedBlock:completion];
                        }
                    });
     return YES;
