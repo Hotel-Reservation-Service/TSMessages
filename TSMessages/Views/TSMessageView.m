@@ -289,7 +289,7 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
         {
             _borderView = [[UIView alloc] initWithFrame:CGRectMake(0.0,
                                                                    0.0, // will be set later
-                                                                   screenWidth,
+                                                                   0.0,
                                                                    [[current valueForKey:@"borderHeight"] floatValue])];
             self.borderView.backgroundColor = [UIColor colorWithHexString:[current valueForKey:@"borderColor"]
                                                                     alpha:1.0];
