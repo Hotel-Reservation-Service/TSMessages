@@ -237,7 +237,7 @@ __weak static UIViewController *_defaultViewController;
     {
         [currentView.viewController.view addSubview:currentView];
         BOOL isCurrentViewAtTop = [currentView.viewController.view convertPoint:currentView.frame.origin toView:[UIApplication sharedApplication].keyWindow].y == 0;
-        if ([TSMessage iOS7StyleEnabled] && !isCurrentViewAtTop) {
+        if ([TSMessage iOS7StyleEnabled] && isCurrentViewAtTop) {
             addStatusBarHeightToVerticalOffset();
         }
     }
