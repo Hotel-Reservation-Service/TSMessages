@@ -192,10 +192,11 @@ __weak static UIViewController *_defaultViewController;
     __block CGFloat verticalOffset = 0.0f;
     
     void (^addStatusBarHeightToVerticalOffset)() = ^void() {
-        BOOL isPortrait = UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]);
-        CGSize statusBarSize = [UIApplication sharedApplication].statusBarFrame.size;
-        CGFloat offset = isPortrait ? statusBarSize.height : statusBarSize.width;
-        verticalOffset += offset;
+        
+        if ([currentView respondsToSelector:@selector(traitCollection)]
+            && currentView.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
+            verticalOffset += CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
+        }
     };
     
     if ([currentView.viewController isKindOfClass:[UINavigationController class]] || [currentView.viewController.parentViewController isKindOfClass:[UINavigationController class]])
@@ -211,7 +212,7 @@ __weak static UIViewController *_defaultViewController;
 		CGRect navigationControllerRect = [currentNavigationController.view convertRect:currentNavigationController.view.frame toView:rootView];
 		BOOL isCurrentNavigationAtTop = navigationControllerRect.origin.y == 0;
         
-        BOOL isViewIsUnderStatusBar = [[[currentNavigationController childViewControllers] firstObject] wantsFullScreenLayout];
+        BOOL isViewIsUnderStatusBar = [[currentNavigationController childViewControllers] firstObject].edgesForExtendedLayout == UIRectEdgeAll;
         if (!isViewIsUnderStatusBar && currentNavigationController.parentViewController == nil) {
             isViewIsUnderStatusBar = ![TSMessage isNavigationBarInNavigationControllerHidden:currentNavigationController]; // strange but true
         }
@@ -234,6 +235,7 @@ __weak static UIViewController *_defaultViewController;
         }
     }
     else
+        
     {
         [currentView.viewController.view.superview addSubview:currentView];
 		verticalOffset = CGRectGetMinY(currentView.viewController.view.frame);
