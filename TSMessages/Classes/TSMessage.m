@@ -181,6 +181,20 @@ __weak static UIViewController *_defaultViewController;
     return self;
 }
 
+- (UINavigationController*)currentNavigationControllerForView:(TSMessageView*)currentView {
+    
+    UINavigationController *navigationController = nil;
+    BOOL isViewControllerNavController = [currentView.viewController isKindOfClass:[UINavigationController class]];
+    BOOL isParentViewControllerNavController = [currentView.viewController.parentViewController isKindOfClass:[UINavigationController class]];
+    if(isViewControllerNavController){
+        navigationController = (UINavigationController *)currentView.viewController;
+    }
+    else if (isParentViewControllerNavController){
+        navigationController = (UINavigationController *)currentView.viewController.parentViewController;
+    }
+    return navigationController;
+}
+
 - (void)fadeInCurrentNotification
 {
     if ([self.messages count] == 0) return;
@@ -192,27 +206,20 @@ __weak static UIViewController *_defaultViewController;
     __block CGFloat verticalOffset = 0.0f;
     
     void (^addStatusBarHeightToVerticalOffset)() = ^void() {
-        
-        if ([currentView respondsToSelector:@selector(traitCollection)]
-            && currentView.traitCollection.userInterfaceIdiom == UIUserInterfaceIdiomPhone) {
-            verticalOffset += CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
-        }
+        verticalOffset += CGRectGetWidth([UIApplication sharedApplication].statusBarFrame);
     };
+
+    UINavigationController *currentNavigationController = [self currentNavigationControllerForView:currentView];
+    BOOL currentNavigationControllerFound = (currentNavigationController != nil);
     
-    if ([currentView.viewController isKindOfClass:[UINavigationController class]] || [currentView.viewController.parentViewController isKindOfClass:[UINavigationController class]])
-    {
-        UINavigationController *currentNavigationController;
-        
-        if([currentView.viewController isKindOfClass:[UINavigationController class]])
-            currentNavigationController = (UINavigationController *)currentView.viewController;
-        else
-            currentNavigationController = (UINavigationController *)currentView.viewController.parentViewController;
-        
-		UIView *rootView = [[[[[UIApplication sharedApplication] delegate] window] rootViewController] view];
-		CGRect navigationControllerRect = [currentNavigationController.view convertRect:currentNavigationController.view.frame toView:rootView];
-		BOOL isCurrentNavigationAtTop = navigationControllerRect.origin.y == 0;
-        
-        BOOL isViewIsUnderStatusBar = [[currentNavigationController childViewControllers] firstObject].edgesForExtendedLayout == UIRectEdgeAll;
+    UIView *rootView = [[[[[UIApplication sharedApplication] delegate] window] rootViewController] view];
+    CGRect navigationControllerRect = [currentNavigationController.view convertRect:currentNavigationController.view.frame toView:rootView];
+    BOOL isCurrentNavigationAtTop = currentNavigationControllerFound && navigationControllerRect.origin.y == 0;
+    
+    BOOL isViewIsUnderStatusBar = currentNavigationControllerFound && [[currentNavigationController childViewControllers] firstObject].edgesForExtendedLayout == UIRectEdgeAll;
+    
+    if (currentNavigationController)
+        {
         if (!isViewIsUnderStatusBar && currentNavigationController.parentViewController == nil) {
             isViewIsUnderStatusBar = ![TSMessage isNavigationBarInNavigationControllerHidden:currentNavigationController]; // strange but true
         }
@@ -222,6 +229,7 @@ __weak static UIViewController *_defaultViewController;
             [currentNavigationController.view insertSubview:currentView
                                                belowSubview:[currentNavigationController navigationBar]];
             verticalOffset = [currentNavigationController navigationBar].bounds.size.height;
+        
             if (([TSMessage iOS7StyleEnabled] || isViewIsUnderStatusBar) && isCurrentNavigationAtTop) {
                 addStatusBarHeightToVerticalOffset();
             }
@@ -235,12 +243,11 @@ __weak static UIViewController *_defaultViewController;
         }
     }
     else
-        
     {
         [currentView.viewController.view.superview addSubview:currentView];
 		verticalOffset = CGRectGetMinY(currentView.viewController.view.frame);
         BOOL isCurrentViewAtTop = [currentView.viewController.view convertPoint:currentView.frame.origin toView:[UIApplication sharedApplication].keyWindow].y == 0;
-        if ([TSMessage iOS7StyleEnabled] && isCurrentViewAtTop) {
+        if ([TSMessage iOS7StyleEnabled] && isCurrentViewAtTop && currentNavigationControllerFound) {
             addStatusBarHeightToVerticalOffset();
         }
     }
