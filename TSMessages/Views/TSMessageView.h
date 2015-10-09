@@ -68,7 +68,9 @@
         buttonTitle:(NSString *)buttonTitle
      buttonCallback:(void (^)())buttonCallback
          atPosition:(TSMessageNotificationPosition)position
-canBeDismissedByUser:(BOOL)dismissingEnabled;
+canBeDismissedByUser:(BOOL)dismissingEnabled
+           delegate :(id <TSMessageViewProtocol>)messageViewDelegate;
+
 
 /** Fades out this notification view */
 - (void)fadeMeOut;
