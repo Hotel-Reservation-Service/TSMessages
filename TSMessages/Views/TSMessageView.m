@@ -96,11 +96,14 @@ static NSMutableDictionary *_notificationDesign;
      buttonCallback:(void (^)())buttonCallback
          atPosition:(TSMessageNotificationPosition)position
 canBeDismissedByUser:(BOOL)dismissingEnabled
+          delegate :(id <TSMessageViewProtocol>)messageViewDelegate
+
 {
     NSDictionary *notificationDesign = [TSMessageView notificationDesign];
     
     if ((self = [self init]))
     {
+        _delegate = messageViewDelegate;
         _title = title;
         _subtitle = subtitle;
         _buttonTitle = buttonTitle;
