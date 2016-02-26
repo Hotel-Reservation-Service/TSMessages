@@ -214,8 +214,9 @@ __weak static UIViewController *_defaultViewController;
 		CGRect navigationControllerRect = [currentNavigationController.view convertRect:currentNavigationController.view.frame toView:rootView];
 		BOOL isCurrentNavigationAtTop = navigationControllerRect.origin.y == 0;
         
-        BOOL isViewIsUnderStatusBar = [[[currentNavigationController childViewControllers] firstObject] wantsFullScreenLayout];
-        if (!isViewIsUnderStatusBar && currentNavigationController.parentViewController == nil) {
+        // .edgesForExtendedLayout - NS_AVAILABLE_IOS(7_0)
+        BOOL isViewIsUnderStatusBar = [[currentNavigationController childViewControllers] firstObject].edgesForExtendedLayout == UIRectEdgeAll;
+        if (isViewIsUnderStatusBar == NO && currentNavigationController.parentViewController == nil) {
             isViewIsUnderStatusBar = ![TSMessage isNavigationBarInNavigationControllerHidden:currentNavigationController]; // strange but true
         }
         
