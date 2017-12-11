@@ -64,9 +64,9 @@
                type:(TSMessageNotificationType)notificationType
            duration:(CGFloat)duration
    inViewController:(UIViewController *)viewController
-           callback:(void (^)())callback
+           callback:(void (^)(void))callback
         buttonTitle:(NSString *)buttonTitle
-     buttonCallback:(void (^)())buttonCallback
+     buttonCallback:(void (^)(void))buttonCallback
          atPosition:(TSMessageNotificationPosition)position
 canBeDismissedByUser:(BOOL)dismissingEnabled
            delegate :(id <TSMessageViewProtocol>)messageViewDelegate;
@@ -75,8 +75,9 @@ canBeDismissedByUser:(BOOL)dismissingEnabled
 /** Fades out this notification view */
 - (void)fadeMeOut;
 
-/** Use this method to load a custom design file */
-+ (void)addNotificationDesignFromFile:(NSString *)file;
-
+/** Use this method to load a custom design file from a specific Bundle */
++ (void)addNotificationDesignFromFile:(NSString *)filename inBundle:(NSBundle*)bundle;
+/** Get Image From Resource Bundle */
++ (UIImage *)bundledImageNamed:(NSString *)name;
 
 @end
