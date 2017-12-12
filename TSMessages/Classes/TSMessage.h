@@ -138,9 +138,9 @@ typedef NS_ENUM(NSInteger,TSMessageNotificationDuration) {
                                    image:(UIImage *)image
                                     type:(TSMessageNotificationType)type
                                 duration:(NSTimeInterval)duration
-                                callback:(void (^)())callback
+                                callback:(void (^)(void))callback
                              buttonTitle:(NSString *)buttonTitle
-                          buttonCallback:(void (^)())buttonCallback
+                          buttonCallback:(void (^)(void))buttonCallback
                               atPosition:(TSMessageNotificationPosition)messagePosition
                     canBeDismissedByUser:(BOOL)dismissingEnabled
                                delegate :(id <TSMessageViewProtocol>)messageViewDelegate;
@@ -157,13 +157,13 @@ typedef NS_ENUM(NSInteger,TSMessageNotificationDuration) {
  @return YES if the currently displayed notification was successfully dismissed. NO if no notification
  was currently displayed.
  */
-+ (BOOL)dismissActiveNotificationWithCompletion:(void (^)())completion;
++ (BOOL)dismissActiveNotificationWithCompletion:(void (^)(void))completion;
 
 /** Use this method to set a default view controller to display the messages in */
 + (void)setDefaultViewController:(UIViewController *)defaultViewController;
 
 /** Use this method to use custom designs in your messages. */
-+ (void)addCustomDesignFromFileWithName:(NSString *)fileName;
++ (void)addCustomDesignFromFileWithName:(NSString *)fileName inBundle:(NSBundle *) bundle;
 
 /** Indicates whether a notification is currently active. */
 + (BOOL)isNotificationActive;
@@ -177,8 +177,8 @@ typedef NS_ENUM(NSInteger,TSMessageNotificationDuration) {
  This depends on the Base SDK and the currently used device */
 + (BOOL)iOS7StyleEnabled;
 
-/** Indicates whether the current navigationBar is hidden by isNavigationBarHidden 
- on the UINavigationController or isHidden on the navigationBar of the current 
+/** Indicates whether the current navigationBar is hidden by isNavigationBarHidden
+ on the UINavigationController or isHidden on the navigationBar of the current
  UINavigationController */
 + (BOOL)isNavigationBarInNavigationControllerHidden:(UINavigationController *)navController;
 
