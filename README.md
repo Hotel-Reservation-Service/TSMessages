@@ -50,8 +50,8 @@ To show notifications use the following code:
                                      atPosition:TSMessageNotificationPositionTop
                             canBeDismisedByUser:YES];
 
-    // Use a custom design file
-    [TSMessage addCustomDesignFromFileWithName:@"AlternativeDesign.json"];
+    // Use a custom design file specify a bundle that
+    [TSMessage addCustomDesignFromFileWithName:@"AlternativeDesign" inBundle:[NSBundle mainBundle]];
 ```
 
 The following properties can be set:
